@@ -1,0 +1,260 @@
+<div class="app-shell">
+  <!-- BARRA LATERAL (SIDEBAR) -->
+  <aside class="sidebar">
+    <div class="brand-header">
+      <div class="brand-logo">TV</div>
+      <div>
+        <div class="brand-title">Tabela de Vida</div>
+        <div class="brand-subtitle">Fator-Chave & Ecologia</div>
+      </div>
+    </div>
+
+    <!-- Cartão da Cultura e Praga Ativa -->
+    @if (lifeTableSvc.activeCenario(); as cen) {
+      <div class="active-context-card">
+        <img
+          [src]="selecaoCtx.culturaSelecionada()?.imagem || 'assets/culturas/soja.jpg'"
+          [alt]="cen.culturaNome"
+          class="ctx-thumb"
+        />
+        <div class="ctx-info">
+          <div class="ctx-culture">{{ cen.culturaNome }}</div>
+          <div class="ctx-pest">{{ cen.pragaNome }}</div>
+          <div class="ctx-sci">{{ cen.pragaCientifico }}</div>
+        </div>
+        <button
+          type="button"
+          class="btn-ctx-alter"
+          (click)="abrirAssistenteSelecao()"
+        >
+          Alterar
+        </button>
+      </div>
+    }
+
+    <!-- Navegação Principal (Abas 0 a 7) -->
+    <div class="nav-section-label">CENTRALIZADOR DE CENÁRIOS</div>
+    <nav class="sidebar-nav">
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 0"
+        (click)="selecionarAba(0)"
+      >
+        <span class="nav-num">00</span>
+        <div class="nav-text">
+          <div class="nav-title">Central de Cenários</div>
+          <div class="nav-sub">Marchas analíticas ({{ lifeTableSvc.cenarios().length }})</div>
+        </div>
+      </button>
+
+      <div class="nav-section-label">ETAPAS DA MARCHA ANALÍTICA</div>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 1"
+        (click)="selecionarAba(1)"
+      >
+        <span class="nav-num">01</span>
+        <div class="nav-text">
+          <div class="nav-title">Coleta & Amostras</div>
+          <div class="nav-sub">Entrada de dados brutos</div>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 2"
+        (click)="selecionarAba(2)"
+      >
+        <span class="nav-num">02</span>
+        <div class="nav-text">
+          <div class="nav-title">Tabela de Vida</div>
+          <div class="nav-sub">Por talhão (lx, dx, 100qx, k)</div>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 3"
+        (click)="selecionarAba(3)"
+      >
+        <span class="nav-num">03</span>
+        <div class="nav-text">
+          <div class="nav-title">Tabela Média & MI</div>
+          <div class="nav-sub">Média ± EP & Indispensável</div>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 4"
+        (click)="selecionarAba(4)"
+      >
+        <span class="nav-num">04</span>
+        <div class="nav-text">
+          <div class="nav-title">Matriz de k & K total</div>
+          <div class="nav-sub">Mortalidade consolidada</div>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 5"
+        (click)="selecionarAba(5)"
+      >
+        <span class="nav-num">05</span>
+        <div class="nav-text">
+          <div class="nav-title">Correlação & Regressão</div>
+          <div class="nav-sub">Pearson & ANOVA Excel</div>
+        </div>
+      </button>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 6"
+        (click)="selecionarAba(6)"
+      >
+        <span class="nav-num">06</span>
+        <div class="nav-text">
+          <div class="nav-title">Gráficos & Está...</div>
+          <div class="nav-sub">porfase.png & k vs ...</div>
+        </div>
+        @if (lifeTableSvc.fatorChaveStage(); as fc) {
+          <span class="nav-crit-badge">{{ fc.stageLabel }}</span>
+        }
+      </button>
+
+      <button
+        type="button"
+        class="nav-item"
+        [class.active]="activeTab() === 7"
+        (click)="selecionarAba(7)"
+      >
+        <span class="nav-num">07</span>
+        <div class="nav-text">
+          <div class="nav-title">Ranking de Criticidade</div>
+          <div class="nav-sub">Ordenação hierárquica</div>
+        </div>
+      </button>
+    </nav>
+
+    <!-- Resumo inferior da barra lateral -->
+    <div class="sidebar-footer-stats">
+      <div class="stat-line">
+        <span>Talhões ativos:</span>
+        <strong>{{ lifeTableSvc.plots().length }}</strong>
+      </div>
+      <div class="stat-line">
+        <span>Amostras / talhão:</span>
+        <strong>{{ lifeTableSvc.activeCenario()?.numAmostrasPorTalhao || 10 }}</strong>
+      </div>
+      <div class="stat-line">
+        <span>Ninfas:</span>
+        <strong>{{ lifeTableSvc.nymphCount() }}</strong>
+      </div>
+      <div class="stat-line">
+        <span>Estágio Crítico:</span>
+        <strong class="crit-color">{{ lifeTableSvc.fatorChaveStage()?.stageLabel || 'Ovo (Ov)' }}</strong>
+      </div>
+    </div>
+    <div class="sidebar-credits">Varley & Gradwell / Pereira et al. (2018)</div>
+  </aside>
+
+  <!-- ÁREA PRINCIPAL -->
+  <div class="main-workspace">
+    <!-- Cabeçalho Superior (Topbar) -->
+    <header class="topbar">
+      <div class="topbar-title-block">
+        <div class="breadcrumb">Sistema de Tabela de Vida /</div>
+        <h1 class="page-main-title">{{ activeTabTitle() }}</h1>
+      </div>
+
+      <div class="topbar-actions">
+        @if (activeTab() !== 0) {
+          <button
+            type="button"
+            class="top-pill-btn gold-outline"
+            (click)="selecionarAba(0)"
+          >
+            Central de Cenários ({{ lifeTableSvc.cenarios().length }})
+          </button>
+        }
+
+        @if (lifeTableSvc.activeCenario(); as cen) {
+          <div class="top-context-pill" (click)="abrirAssistenteSelecao()">
+            <strong>{{ cen.culturaNome }}</strong>
+            <span class="dot">•</span>
+            <span>{{ cen.pragaNome }}</span>
+            <span class="new-cenario-tag">+ NOVO CENÁRIO</span>
+          </div>
+        }
+
+        <button
+          type="button"
+          class="top-pill-btn gold-outline"
+          (click)="abrirModalImportar()"
+        >
+          Importar / Colar
+        </button>
+
+        <button
+          type="button"
+          class="top-pill-btn"
+          (click)="restaurarPadrao()"
+        >
+          Restaurar Padrão
+        </button>
+      </div>
+    </header>
+
+    <!-- Conteúdo dinâmico das Abas 0 a 7 -->
+    <main class="content-area">
+      @switch (activeTab()) {
+        @case (0) {
+          <app-cenarios-analiticos
+            (navegarParaAba)="selecionarAba($event)"
+          ></app-cenarios-analiticos>
+        }
+        @case (1) {
+          <app-coleta-dados></app-coleta-dados>
+        }
+        @case (2) {
+          <app-tabela-vida></app-tabela-vida>
+        }
+        @case (3) {
+          <app-tabela-media></app-tabela-media>
+        }
+        @case (4) {
+          <app-matriz-k></app-matriz-k>
+        }
+        @case (5) {
+          <app-correlacao-regressao></app-correlacao-regressao>
+        }
+        @case (6) {
+          <app-graficos-estagio-critico></app-graficos-estagio-critico>
+        }
+        @case (7) {
+          <app-ranking-criticidade></app-ranking-criticidade>
+        }
+      }
+    </main>
+  </div>
+</div>
+
+<!-- Assistente Modal de 3 Etapas (RF001, RF002, RF003) -->
+<app-tela-inicial-selecao
+  (selecaoConcluida)="onSelecaoConcluida()"
+></app-tela-inicial-selecao>
+
+<!-- Modal de Importação TSV / CSV / Excel (RF009) -->
+<app-importar-modal
+  [aberto]="importarModalAberto()"
+  (fechar)="importarModalAberto.set(false)"
+></app-importar-modal>

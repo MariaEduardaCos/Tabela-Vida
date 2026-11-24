@@ -1,0 +1,6 @@
+/* Estilos do componente raiz delegados ao styles.scss global */
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
